@@ -29,3 +29,12 @@ for i in xrange(1,n+1):
     print p + '_=_' + k + '_*_' + v
 
 
+
+# inpt = input()
+# m = inpt[0]
+# n = inpt[1]
+# max_len = len(str(m*n))
+#
+# for i in range(1, n + 1):
+#     print '{2:_>{3}}_=_{1:_>{4}}_*_{0}'.format(m,i,m*i, max_len, len(str(n)));
+
