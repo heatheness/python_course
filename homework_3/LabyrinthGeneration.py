@@ -2,9 +2,16 @@
 
 __author__ = 'nyash myash'
 
+import timeit
+
+"""Генерирует проходимые лабиринты m x n. Каждая из m строк лабринта содержит n символов: «.» — проходимый участок и «#»
+—  непроходимый. Левый верхний и правый нижний участки лабиринта проходимы. С одного проходимого участка можно попасть
+на соседний либо по вертикали, либо по горизонтали. Для удобства вывода лабиринт представлен одной строкой, разделенной
+символами перехода но новую строку"""
+
 import random
 
-def gen_lab(m):
+def gen_lab(m,n):
     """генерирует лабиринт"""
 
     def lab_to_string(lab):
@@ -16,48 +23,37 @@ def gen_lab(m):
 
     def gen_filed(m):
         """генерирует поле точек размером m x m"""
-        l = [ ['.'] *m for i in xrange(m)]
+        l = [ ['.'] * n for i in xrange(m)]
         return l
 
 
     def gen_route(l):
         """генерирует случайный мрашрут"""
-        n = len(l)-1
         visited = []
         route = []
         plan = [[(0,0),None]]
+        u = m-1
+        v = n-1
 
         while True:
             cur = plan.pop()
-            # print cur
-            # print 'cur ',cur
             directs = []
             if cur[0] in visited:
                 continue
-            elif cur[0] == (n,n):
+            elif cur[0] == (u,v):
                 break
             else:
                 route.append(cur[0])
                 visited.append(cur[0])
                 i,j = cur[0]
-                # print 'i,j', i,j
                 if (j-1) >= 0 and ((i,j-1) not in visited):
                     directs.append([(i,j-1),cur[0]])
-                    # print i,j
-                    # print 'left appended', directs
-                if (i+1) <= n and ((i+1,j) not in visited):
+                if (i+1) <= u and ((i+1,j) not in visited):
                     directs.append([(i+1,j),cur[0]])
-                    # print i,j
-                    # print 'down appended', directs
-                if (j+1) <= n and ((i,j+1) not in visited):
+                if (j+1) <= v and ((i,j+1) not in visited):
                     directs.append([(i,j+1),cur[0]])
-                    # print i, j
-                    # print 'right appended', directs
                 if (i-1) >= 0 and ((i-1,j)not in visited):
                     directs.append([(i-1,j),cur[0]])
-                    # print i,j
-                    # print 'up appended', directs
-                # print 'directs ',directs
                 if not directs:
                     route.pop()
                     new_cur_par = plan[-1][1]
@@ -68,25 +64,23 @@ def gen_lab(m):
                             break
                     continue
                 else:
-                    random.shuffle(directs)
-                    # print 'shuffled directs', directs
+                    random.shuffle(directs) # перемешиваем направления движения
                     plan.extend(directs)
-        route.append((n,n))
+        route.append((u,v))
         return route
 
 
     def gen_walls(l, route):
         """генерирует стены в лабиринте"""
-        w = len(l)
+        w =  len(l)*len(l[0])
         # вероятность построения стен зависит от отношения длины пути к размеру лабиринта
         # чем больше путь, тем больше вероятность, что на свободных местах появятся стены
-        if w <5:
+        if w <= 100:
             p = 8
         else:
-            p = int(len(route)*10.0/w**2)
-        if p < 4: p = 4 # корректировка, чтобы не было совсем пусто
+            p = max(int(len(route)*10.0/w**2),4) # корректировка, чтобы не было совсем пусто
         for i in xrange(m):
-            for j in xrange(m):
+            for j in xrange(n):
                 if (i,j) not in route:
                     key = random.randint(0,11)
                     if key <= p:
@@ -107,12 +101,14 @@ def gen_lab(m):
     return lab_to_string(l)
 
 
+dim = raw_input().split(',')
 
-m = int(raw_input())
-s = gen_lab(m)
+st = timeit.default_timer()
+m = int(dim[0])
+n = int(dim[1])
+s = gen_lab(m,n)
+print timeit.default_timer() - st
 print s
-
-
 
 
 
