@@ -12,8 +12,6 @@ s = 'aaa b a cc wwwww eee  yui  abaaaaabbbbbab vnvv fgfgfgfg werwerwer axaxxxxxa
 # s = s.rsplit()
 # print s
 
-# def num(s):
-#     return len(set(s))
 
 p = sorted(s.split(),key = lambda x: len(set(x)))
 e = " ".join(p)
